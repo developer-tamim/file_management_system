@@ -1,14 +1,39 @@
 <template>
-    <div>
-        <h1>file management system</h1>
-        <h1 class="text-4xl">test</h1>
-        <h1 class="text-4xl text-red-600">test</h1>
-        <h1 class="text-4xl text-green-500">test</h1>
-    </div>
-</template>
+    <Provider>
+      <div class="flex h-screen overflow-hidden">
+        <Sidebar :open="sidebarOpen" @openChange="setSidebarOpen" />
+        <div class="flex flex-col flex-1 overflow-hidden">
+          <Header :sidebarOpen="sidebarOpen" @sidebarOpenChange="setSidebarOpen" />
+          <Content />
+        </div>
+      </div>
+    </Provider>
+  </template>
 
-<script>
-export default {};
-</script>
+  <script>
+  import { ref } from 'vue'
+  import Sidebar from './Components/Sidebar.vue'
+  import Header from './Components/Header.vue'
+  import Content from './Components/Content.vue'
+  import Provider from './Components/Provider.vue'
 
-<style></style>
+  export default {
+    components: {
+      Sidebar,
+      Header,
+      Content,
+      Provider
+    },
+    setup() {
+      const sidebarOpen = ref(true)
+      const setSidebarOpen = (value) => {
+        sidebarOpen.value = value
+      }
+
+      return {
+        sidebarOpen,
+        setSidebarOpen
+      }
+    }
+  }
+  </script>
