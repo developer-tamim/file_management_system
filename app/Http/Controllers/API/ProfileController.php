@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -9,13 +10,11 @@ use Illuminate\Validation\Rules\Password;
 class ProfileController extends Controller
 {
     /**
-     * Show the profile edit form.
+     * Get the authenticated user's profile.
      */
-    public function edit()
+    public function show()
     {
-        return view('profile.edit', [
-            'user' => auth()->user()
-        ]);
+        return response()->json(auth()->user());
     }
     
     /**
@@ -38,7 +37,7 @@ class ProfileController extends Controller
         $user->company = $request->company;
         $user->save();
         
-        return redirect()->back()->with('success', 'Profile updated successfully.');
+        return response()->json($user);
     }
     
     /**
@@ -55,6 +54,6 @@ class ProfileController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         
-        return redirect()->back()->with('success', 'Password updated successfully.');
+        return response()->json(['message' => 'Password updated successfully']);
     }
 }
