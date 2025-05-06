@@ -2,59 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProfileController extends Controller
 {
     /**
-     * Show the profile edit form.
+     * Display the user's profile form.
      */
-    public function edit()
+    public function edit(Request $request): Response
     {
-        return view('profile.edit', [
-            'user' => auth()->user()
+        return Inertia::render('Profile/Edit', [
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
         ]);
     }
-    
+
     /**
-     * Update the user's profile.
+     * Update the user's profile information.
      */
-    public function update(Request $request)
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = auth()->user();
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'company' => 'nullable|string|max:255',
-        ]);
-        
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->company = $request->company;
-        $user->save();
-        
-        return redirect()->back()->with('success', 'Profile updated successfully.');
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        $request->user()->save();
+
+        return Redirect::route('profile.edit');
     }
-    
+
     /**
-     * Update the user's password.
+     * Delete the user's account.
      */
-    public function updatePassword(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
-            'current_password' => 'required|current_password',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'current_password'],
         ]);
-        
-        $user = auth()->user();
-        $user->password = Hash::make($request->password);
-        $user->save();
-        
-        return redirect()->back()->with('success', 'Password updated successfully.');
+
+        $user = $request->user();
+
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
 }
