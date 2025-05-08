@@ -31,9 +31,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Route::get('/{any}', function () {
-//     return view('app');
-// })->where('any', '.*');
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*');
 
 
 Route::get('/files', [FileController::class, 'index']);
@@ -59,6 +59,6 @@ Route::post('/storage-providers', [StorageProviderController::class, 'store']);
 Route::post('/storage-providers/connect', [StorageProviderController::class, 'connect']);
 
 // Profile
-Route::get('/profile', [ProfileController::class, 'show']);
-Route::put('/profile', [ProfileController::class, 'update']);
-Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
+// Route::get('/profile', [ProfileController::class, 'show']);
+// Route::put('/profile', [ProfileController::class, 'update']);
+// Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
