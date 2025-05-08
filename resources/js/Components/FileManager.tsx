@@ -41,7 +41,7 @@ export default defineComponent({
     return () => (
       <>
         <FileManagerSidebar open={sidebarOpen.value} onUpdate:open={setSidebarOpen} />
-        <div class="flex flex-col flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden">
           <FileManagerHeader />
           <FileManagerContent />
         </div>

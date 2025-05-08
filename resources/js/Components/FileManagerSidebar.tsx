@@ -1,7 +1,7 @@
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
-import CategorySection from './sidebar/CategorySection.vue'
-import StorageSection from './sidebar/StorageSection.vue'
+import CategorySection from './sidebar/CategorySection'
+import StorageSection from './sidebar/StorageSection'
 
 export default defineComponent({
   name: 'FileManagerSidebar',
@@ -39,10 +39,10 @@ export default defineComponent({
   },
   render() {
     return (
-      <div class="file-manager-sidebar" style={{ width: this.open ? '280px' : '0' }}>
-        <div class="sidebar-header">
+      <div className="file-manager-sidebar" style={{ width: this.open ? '280px' : '0' }}>
+        <div className="sidebar-header">
           <h3>{this.$t('sidebar.title')}</h3>
-          <button class="close-button" onClick={() => emit('update:open', false)}>
+          <button className="close-button" onClick={() => emit('update:open', false)}>
             ×
           </button>
         </div>
